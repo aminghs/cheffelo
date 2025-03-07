@@ -1,4 +1,3 @@
-// Need to use the React-specific entry point to import createApi
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Product } from "../../types";
 
@@ -20,12 +19,26 @@ export const basketApi = createApi({
       invalidatesTags: ["Basket"],
     }),
     addToBasket: builder.mutation<Product[], Product>({
-      query: () => "", // Implement me
+      query: (product) => ({
+        url: "basket/add",
+        method: "POST",
+        body: { ...product, quantity: 1 }, // Default quantity to 1
+      }),
+      invalidatesTags: ["Basket"],
     }),
     removeFromBasket: builder.mutation<Product[], Product["productId"]>({
-      query: () => "", // Implement me
+      query: (productId) => ({
+        url: `basket/remove/${productId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Basket"],
     }),
   }),
 });
 
-export const { usePostBasketMutation, useGetBasketQuery } = basketApi;
+export const {
+  usePostBasketMutation,
+  useGetBasketQuery,
+  useAddToBasketMutation,
+  useRemoveFromBasketMutation,
+} = basketApi;
